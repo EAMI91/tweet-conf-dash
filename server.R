@@ -68,7 +68,7 @@ function(session, input, output) {
   tweets <- reactive({
     req(tweets_all())
     tweets_all() %>%
-      filter(is_topic) %>%
+      # filter(is_topic) %>% nrow
       tweet_cache_oembed()
   })
 
