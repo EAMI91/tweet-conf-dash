@@ -38,11 +38,11 @@ META <- list(
 # gathering.
 TOPIC <- list(
   # Name of the conference or topic, for use in descriptive text
-  name             = "rstudio::conf",
+  name             = "aprende en casa",
   # Name of the full Twitter community, for use in descriptive text
-  full_community   = "#rstats",
+  full_community   = "sep",
   # Terms related to the topic that must be included in topical tweet text
-  terms            = c("emoctezumab"),
+  terms            = c("emoctezumab","sep_mx"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
   hashtag_exclude  = "rstudio?conf|rstduioconf|rstats|rstudio conf",
   # Words to exclude from the Top 10 Words list (because they're implied by the topic)
