@@ -42,7 +42,7 @@ TOPIC <- list(
   # Name of the full Twitter community, for use in descriptive text
   full_community   = "#rstats",
   # Terms related to the topic that must be included in topical tweet text
-  terms            = c("amlo"),
+  terms            = c("emoctezumab"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
   hashtag_exclude  = "rstudio?conf|rstduioconf|rstats|rstudio conf",
   # Words to exclude from the Top 10 Words list (because they're implied by the topic)
