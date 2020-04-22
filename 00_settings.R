@@ -42,7 +42,7 @@ TOPIC <- list(
   # Name of the full Twitter community, for use in descriptive text
   full_community   = "#rstats",
   # Terms related to the topic that must be included in topical tweet text
-  terms            = c("rstudioconf", "rstudio conf", "rstudio::conf", "rstudiconf", "rstduioconf"),
+  terms            = c("amlo"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
   hashtag_exclude  = "rstudio?conf|rstduioconf|rstats|rstudio conf",
   # Words to exclude from the Top 10 Words list (because they're implied by the topic)
@@ -181,16 +181,16 @@ BLOCKLIST <- list(
 
 
 # Demo Settings -----------------------------------------------------------
-DEMO <- list(
-  relive_date = ymd("2019-01-18", tz = tz_global())
-)
-
-if (exists("DEMO") && !is.null(DEMO$relive_date)) {
-  DEMO$adjust_days <-
-    difftime(today_tz(), DEMO$relive_date, unit = "day") %>%
-    as.numeric() %>%
-    ceiling()
-
-  .workshop_start   <<- as_date(.workshop_start + days(DEMO$adjust_days))
-  .conference_start <<- as_date(.conference_start + days(DEMO$adjust_days))
-}
+# DEMO <- list(
+#   relive_date = ymd("2019-01-18", tz = tz_global())
+# )
+#
+# if (exists("DEMO") && !is.null(DEMO$relive_date)) {
+#   DEMO$adjust_days <-
+#     difftime(today_tz(), DEMO$relive_date, unit = "day") %>%
+#     as.numeric() %>%
+#     ceiling()
+#
+#   .workshop_start   <<- as_date(.workshop_start + days(DEMO$adjust_days))
+#   .conference_start <<- as_date(.conference_start + days(DEMO$adjust_days))
+# }
