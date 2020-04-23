@@ -15,12 +15,10 @@ tweetExplorerUI <- function(id, tweet_div_id = "tweetExplorer-tweet", collapsed 
           collapsed = collapsed,
           selectInput(
             ns('view'),
-            'Tweet Group',
+            'Grupo de tuits',
             c('Popular',
-              'Tips',
-              "Talks",
-              "Pictures",
-              "All")
+              "Multimedia",
+              "Todos")
           ),
           uiOutput(ns('help_text')),
           uiOutput(ns('filters'))
@@ -69,24 +67,21 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/N
       'Popular' = all_tweets %>%
         arrange(desc(retweet_count + favorite_count),
                 -map_int(mentions_screen_name, length)),
-      'Tips' = all_tweets %>% filter(relates_tip, !is_retweet),
-      'Talks' = all_tweets %>% filter(relates_session, !is_retweet),
-      'Pictures' = all_tweets %>% filter(!is_retweet, !is.na(media_url)),
+      'Multimedia' = all_tweets %>% filter(!is_retweet, !is.na(media_url)),
       all_tweets
     )
 
-    if (input$view %in% c('All', 'Popular')) {
+    if (input$view %in% c('Todos', 'Popular')) {
       if (length(input$filter_binary)) {
         for (filter_binary in input$filter_binary) {
           x <- switch(
             filter_binary,
             # 'Not Retweet' = filter(x, !is_retweet),
-            'Not Quote' = filter(x, !is_quote),
-            'Has Media' = filter(x, !is.na(media_url)),
-            'Has Link' = filter(x, !is.na(urls_url)),
-            'Has Github Link' = filter(x, str_detect(urls_url, "github")),
-            "Retweeted" = filter(x, retweet_count > 0),
-            "Favorited" = filter(x, favorite_count > 0),
+            'RT con comentario' = filter(x, !is_quote),
+            'Tiene multimedia' = filter(x, !is.na(media_url)),
+            'Tiene Link' = filter(x, !is.na(urls_url)),
+            "Retuiteados" = filter(x, retweet_count > 0),
+            "Favoritos" = filter(x, favorite_count > 0),
             x
           )
         }
@@ -105,17 +100,15 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/N
     req(input$view)
     switch(
       input$view,
-      'Popular' = helpText(HTML("&#x1F4AF;"),  "Most popular (retweets + favs) first"),
-      'Tips' = helpText(HTML("&#x1F4A1;"), "Original or quote tweets that mention a tip"),
-      'Talks' = helpText(HTML("&#x1F393;"),  "Original or quote tweets that mention \"slides\", \"presentations\", etc."),
-      'Pictures' = helpText(HTML("&#x1F4F8;"),  "Tweets that come with a picture"),
-      'All' = helpText(HTML("&#x1F917;"), "All the tweets"),
+      'Popular' = helpText(HTML("&#x1F4AF;"),  "Más populares (retuits + favs) primero"),
+      'Multimedia' = helpText(HTML("&#x1F4F8;"),  "Tuits con multimedia"),
+      'Todos' = helpText(HTML("&#x1F917;"), "Todos los tuits"),
       NULL
     )
   })
 
   hashtags_related <- reactive({
-    req(input$view %in% c('All', 'Popular'))
+    req(input$view %in% c('Todos', 'Popular'))
     if (is.null(input$filter_hashtag) || input$filter_hashtag == '') return(top_hashtags())
     limit_to_tags <- related_hashtags %>%
       filter(tag %in% input$filter_hashtag) %>%
@@ -129,10 +122,10 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/N
   output$filters <- renderUI({
     selected_hashtags <- isolate(input$filter_hashtag)
     selected_binary <- isolate(input$filter_binary)
-    if (input$view %in% c('All', 'Popular')) {
+    if (input$view %in% c('Todos', 'Popular')) {
       tagList(
         checkboxGroupInput(ns('filter_binary'), 'Tweet Filters',
-                           choices = c("Not Quote", "Has Media", "Has Link", "Has Github Link", "Retweeted", "Favorited"),
+                           choices = c("Sin citas", "Tiene multimedia", "Tiene link", "Retuits", "Favoritos"),
                            selected = selected_binary,
                            inline = TRUE),
         selectizeInput(ns('filter_hashtag'), 'Hashtags', choices = c("", hashtags_related()), selected = selected_hashtags,
@@ -151,7 +144,7 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/N
   selection = 'single',
   style = "bootstrap",
   rownames = FALSE,
-  colnames = c("Timestamp", "User", "Tweet", "RT", "Fav", "Mentioned"),
+  colnames = c("Fecha", "Usuario", "Tuit", "RT", "Fav", "Menciones"),
   filter = 'top',
   options = list(lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5)
   )
@@ -164,7 +157,7 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/N
         pmap_chr(get_tweet_blockquote) %>%
         HTML()
     } else {
-      HTML('<blockquote>Choose a tweet from the table...</blockquote>')
+      HTML('<blockquote>Escoja un tuit de la tabla...</blockquote>')
     }
 
     tags$div(class = "tweet-item", x)
