@@ -1,17 +1,17 @@
 # ---- Metadata ----
 META <- list(
   # Name of the app, used in the browser/tab title
-  name        = "rstudio::conf(\'tweets\')",
+  name        = "Aprende en casa",
   # A description of the app, used in social media cards
-  description = "A Shiny Dashboard, rstudio::conf #FOMO reducer, tweet explorer by @grrrck",
+  description = "Un tablero de control que explora los tuits relacionados con #AprendeEnCasa",
   # Link to the app, used in social media cards
   app_url     = "https://apps.garrickadenbuie.com/rstudioconf-2019/",
   # Link to app icon image, used in social media cards
   app_icon    = "https://garrickadenbuie.com/images/2019/rstudioconf-2019-icon.png",
   # The name of the conference or organization
-  conf_org    = "rstudio::conf",
+  conf_org    = "Gerencia del Poder",
   # App title, long, shown when sidebar is open, HTML is valid
-  logo_lg     = "<em>rstudio</em>::<strong>conf</strong>(2019)",
+  logo_lg     = "<em>Aprende en casa</em>",
   # App title, short, shown when sidebar is collapsed, HTML is valid
   logo_mini   = "<em>rs</em><strong>c</strong>",
   # Icon for box with count of conference-related tweets
@@ -38,9 +38,9 @@ META <- list(
 # gathering.
 TOPIC <- list(
   # Name of the conference or topic, for use in descriptive text
-  name             = "aprende en casa",
+  name             = "Aprende en casa",
   # Name of the full Twitter community, for use in descriptive text
-  full_community   = "sep",
+  full_community   = "Aprende en casa",
   # Terms related to the topic that must be included in topical tweet text
   terms            = c("emoctezumab","sep_mx"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
@@ -61,8 +61,8 @@ TWEET_MOST <- list(
 )
 
 # ---- Dates and Times ----
-TWEETS_START_DATE <- "2019-01-01"  # Don't show tweets before this date
-TZ_GLOBAL <- "America/Chicago"     # Time zone where conference is taking place
+TWEETS_START_DATE <- "2020-04-01"  # Don't show tweets before this date
+TZ_GLOBAL <- "America/Mexico_City"     # Time zone where conference is taking place
 Sys.setenv(TZ = TZ_GLOBAL)
 
 # A helper to get today() in the app's timezone
@@ -75,27 +75,13 @@ today_tz <- function() today(tz_global())
 # for the Tweet Wall date presets. The input IDs link to TWEET_DATE_RANGE and
 # need to be defined there.
 TWEET_WALL_DATE_INPUTS <- c(
-  "Today"     = "today",
-  "Yesterday" = "yesterday",
-  "Past week" = "past_week",
-  "In 2019"   = "in_2019"
+  "Hoy"     = "today",
+  "Ayer" = "yesterday",
+  "Semana pasada" = "past_week",
+  "En 2020"   = "in_2020"
 )
 
-# Conference-related dates, used only for the rest of this section
-.workshop_start   <- ymd("2019-01-15", tz = tz_global())
-.conference_start <- ymd("2019-01-17", tz = tz_global())
 
-# Only show "Since Workshop" button _after_ workshops have started
-if (today_tz() > .workshop_start) {
-  TWEET_WALL_DATE_INPUTS <- c(
-    TWEET_WALL_DATE_INPUTS, "Since Workshops" = "since_workshop")
-}
-
-# Only show "Conference Proper" button _after_ conference has started
-if (today_tz() > .conference_start) {
-  TWEET_WALL_DATE_INPUTS <- c(
-    TWEET_WALL_DATE_INPUTS, "Conference Proper" = "conf_prop")
-}
 
 # TWEET_WALL_DATE_RANGE:
 # A function that returns a date range as c(start, end) for each inputId defined
@@ -107,10 +93,7 @@ TWEET_WALL_DATE_RANGE <- function(inputId) {
     "today"          = c(start = today_tz(),        end = today_tz()),
     "yesterday"      = c(start = today_tz() - 1,    end = today_tz() - 1),
     "past_week"      = c(start = today_tz() - 7,    end = today_tz()),
-    "in_2019"        = c(start = ymd("2019-01-01"), end = today_tz()),
-    "since_workshop" = c(start = .workshop_start,   end = today_tz()),
-    "conf_prop"      = c(start = .conference_start, end = today_tz()),
-    "conf_and_after" = c(start = .workshop_start,   end = today_tz()),
+    "in_2020"        = c(start = ymd("2020-01-01"), end = today_tz()),
     NA
   )
 }

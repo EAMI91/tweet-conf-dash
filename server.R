@@ -246,7 +246,7 @@ function(session, input, output) {
   output$dash_most_liked <- renderUI({
     validate(
       need(nrow(tweets_most()) > 0,
-      paste("No tweets in", TWEET_MOST$text)
+      paste("No hay tuits en", TWEET_MOST$text)
     ))
 
     tweets_most() %>%
@@ -283,7 +283,6 @@ function(session, input, output) {
   # High Score --------------------------------------------------------------
   output$top_emojis <- renderUI({
     emoji_regex <- "[\\uD83C-\\uDBFF\\uDC00-\\uDFFF\u2600-\u27ff]+"
-
     twe <- tweets() %>%
       select(text) %>%
       tidytext::unnest_tokens(text, text, token = "tweets") %>%
@@ -402,7 +401,7 @@ function(session, input, output) {
 
     validate(need(
      nrow(tweets_wall()) > 0,
-     "No tweets in selected date range. Try another set of dates."
+     "No hay tuits en el intervalo de tiempo seleccionado. Intente con otras fechas."
     ))
 
     tweets_wall() %>%
@@ -437,7 +436,7 @@ function(session, input, output) {
 
     validate(need(
       nrow(tweets_pictures()) > 0,
-      "No media tweets yet. Check back again soon."
+      "No hay tuits con multimedios. Regrese pronto."
     ))
 
     tweets_pictures() %>%

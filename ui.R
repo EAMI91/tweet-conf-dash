@@ -19,11 +19,11 @@ dashboardPage(
   # Dashboard Sidebar -------------------------------------------------------
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Dashboard", tabName = "tab_dashboard", icon = icon("dashboard")),
-      menuItem("High Score", tabName = "tab_high_score", icon = icon("trophy")),
-      menuItem("Tweet Wall", tabName = "tab_tweet_wall", icon = icon("stream")),
-      menuItem("Media Tweets", tabName = "tab_pic_tweets", icon = icon("images")),
-      menuItem("Explore", tabName = "tab_explore", icon = icon("compass")),
+      menuItem("Tablero de control", tabName = "tab_dashboard", icon = icon("dashboard")),
+      menuItem("Puntuaciones", tabName = "tab_high_score", icon = icon("trophy")),
+      menuItem("Muro de tuits", tabName = "tab_tweet_wall", icon = icon("stream")),
+      menuItem("Tuits con multimedios", tabName = "tab_pic_tweets", icon = icon("images")),
+      menuItem("Exploración", tabName = "tab_explore", icon = icon("compass")),
       if (!is.null(SCHEDULE$data)) {
         menuItem("Schedule", tabName = "tab_schedule", icon = icon("calendar"))
       } else if (!is.null(SCHEDULE$url)) {
@@ -89,19 +89,19 @@ dashboardPage(
           # Frontpage - boxes - start -----------------------------------------------
           valueBox(
             inputId = "total_today",
-            "—", "Tweets Today",
+            "—", "Tuits de hoy",
             color = "purple",
             icon = icon("comment-dots"),
             width = dashboard_box_size),
           valueBox(
             inputId = "tweeters_today",
-            "—", "Tweeters Today",
+            "—", "Tuiteros de hoy",
             color = "orange",
             icon = icon("user-circle"),
             width = dashboard_box_size),
           valueBox(
             inputId = "rate",
-            "—", "Tweets/hr Today",
+            "—", "Tuits/hr de hoy",
             color = "green",
             icon = icon("hourglass-half"),
             width = dashboard_box_size),
@@ -131,12 +131,12 @@ dashboardPage(
             width = 12,
             tabPanel(
               status = "primary",
-              title = "Tweet Volume",
+              title = "Volumen the tuits",
               withSpinner(plotlyOutput("plot_hourly_tweet_volume", height = "250px"))
             ),
             tabPanel(
               status = "success",
-              title = "Tweets by Hour of Day",
+              title = "Tuits por hora del día",
               withSpinner(plotlyOutput("plot_tweets_by_hour", height = "250px"))
             )
           )
@@ -149,7 +149,7 @@ dashboardPage(
             offset = 2,
             class = "col-md-6 col-md-offset-0 col-lg-4",
             class = "text-center",
-            tags$h4(HTML(twemoji("2764"), "Most Liked in", TWEET_MOST$text)),
+            tags$h4(HTML(twemoji("2764"), "Más me gusta en", TWEET_MOST$text)),
             withSpinner(uiOutput("dash_most_liked"), proxy.height = "200px")
           ),
           column(
@@ -157,7 +157,7 @@ dashboardPage(
             offset = 2,
             class = "col-md-6 col-md-offset-0 col-lg-4",
             class = "text-center",
-            tags$h4(HTML(twemoji("1F31F"), "Most RT in", TWEET_MOST$text)),
+            tags$h4(HTML(twemoji("1F31F"), "Más RT en", TWEET_MOST$text)),
             withSpinner(uiOutput("dash_most_rt"), proxy.height = "200px")
           ),
           column(
@@ -165,7 +165,7 @@ dashboardPage(
             offset = 2,
             class = "col-md-6 col-md-offset-0 col-lg-4",
             class = "text-center",
-            tags$h4(HTML(twemoji("1F389"), "Most Recent")),
+            tags$h4(HTML(twemoji("1F389"), "Más reciente")),
             withSpinner(uiOutput("dash_most_recent"), proxy.height = "200px")
           )
           # Frontpage - Most XX Tweets - end ----------------------------------------
@@ -179,37 +179,37 @@ dashboardPage(
           box(
             width = "6 col-lg-3",
             status = "info",
-            title = "Top Tweeters",
+            title = "Top tuiteros",
             tags$div(
               class = "scroll-overflow-x",
               withSpinner(uiOutput("top_tweeters"))
             ),
-            helpText("Weighted average of RT (2x) and favorites (1x) per tweet")
+            helpText("Promedio ponderado de RT (2x) y favoritos (1x) por tuit")
           ),
           box(
             width = "6 col-lg-3",
             status = "danger",
-            title = "Top Hashtags",
+            title = "Top hashtags",
             withSpinner(uiOutput("top_hashtags")),
-            helpText("Times hashtag was used relative to most popular hashtag, excludes",
+            helpText("Veces que el hashtag fue utilizado relativo a los hashtag más populares, excluidos",
                      tags$code(TOPIC$name),
                      if (!is.null(TOPIC$full_community)) paste(
-                       "and", tags$code(TOPIC$full_community))
+                       "y", tags$code(TOPIC$full_community))
                      )
           ),
           box(
             width = "6 col-lg-3",
             status = "warning",
-            title = "Top Words",
+            title = "Top palabras",
             withSpinner(uiOutput("top_tweet_words")),
-            helpText("Times word was used relative to most popular word")
+            helpText("Veces que una palabra fue utilizada relativo a la palabra más popular")
           ),
           box(
             width = "6 col-lg-3",
             status = "success",
-            title = "Top Emoji",
+            title = "Top emoji",
             withSpinner(uiOutput("top_emojis")),
-            helpText("Times emoji was used relative to most used emoji")
+            helpText("Veces que un emoji fue utilizado relativo al emoji más popular.")
           )
         )
       ),
@@ -218,7 +218,7 @@ dashboardPage(
       tabItem(
         "tab_tweet_wall",
         class = "text-center",
-        tags$h1("Tweets about", TOPIC$name),
+        tags$h1("Tuits acerca de", TOPIC$name),
         # Tweet Wall - twitter.js and masonry.css - start --------------------
         # twitter.js has to be loaded after the page is loaded (divs exist and jquery is loaded)
         tags$head(HTML(
@@ -247,7 +247,7 @@ dashboardPage(
                   class = "btn-toolbar btn-group-sm",
                   dateRangeInput("tweet_wall_daterange", "",
                                  start = today(tz_global()), end = today(tz_global()),
-                                 min = "2019-01-01", max = today(tz_global()),
+                                 min = "2020-01-01", max = today(tz_global()),
                                  weekstart = 1, separator = " to "),
                   shinyThings::dropdownButtonUI("tweet_wall_date_presets",
                                                 TWEET_WALL_DATE_INPUTS,
@@ -267,7 +267,7 @@ dashboardPage(
       tabItem(
         "tab_pic_tweets",
         class = "text-center",
-        tags$h1(HTML("Tweets with", twemoji("1F5BC", width = "42px"))),
+        tags$h1(HTML("Tuits con", twemoji("1F5BC", width = "42px"))),
         shinyThings::paginationUI("pic_tweets", width = 12, offset = 0),
         withSpinner(uiOutput("pic_tweets_wall"), type = 3),
         shinyThings::pagerUI("pic_tweets", centered = TRUE)
