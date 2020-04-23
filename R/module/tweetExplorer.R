@@ -38,7 +38,7 @@ tweetExplorerUI <- function(id, tweet_div_id = "tweetExplorer-tweet", collapsed 
   )
 }
 
-tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/New_York") {
+tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/Mexico_City") {
   ns <- session$ns
 
   top_hashtags <- reactive({
