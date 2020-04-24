@@ -132,12 +132,7 @@ dashboardPage(
             tabPanel(
               status = "primary",
               title = "Volumen the tuits",
-              withSpinner(plotlyOutput("plot_hourly_tweet_volume", height = "250px"))
-            ),
-            tabPanel(
-              status = "success",
-              title = "Tuits por hora del día",
-              withSpinner(plotlyOutput("plot_tweets_by_hour", height = "250px"))
+              withSpinner(highchartOutput("plot_hourly_tweet_volume", height = "600px"))
             )
           )
           # Frontpage - tweet volume plots - end ------------------------------------
@@ -260,7 +255,8 @@ dashboardPage(
           shinyThings::paginationUI("tweet_wall_pager", width = 12, offset = 0)
         ),
         withSpinner(uiOutput("tweet_wall_tweets"), type = 3),
-        shinyThings::pagerUI("tweet_wall_pager", centered = TRUE)
+        shinyThings::pagerUI("tweet_wall_pager", centered = TRUE,
+                             label_prev = "Anterior",label_next="Siguiente")
       ),
 
       # Pictures - tab_pic_tweets -----------------------------------------------

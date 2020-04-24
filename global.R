@@ -3,21 +3,37 @@ library(shiny)
 library(shinydashboard)
 library(forcats)
 library(ggplot2)
-library(plotly)
 library(lubridate)
 library(stringr)
 library(tidyr)
 library(purrr)
 library(dplyr)
 library(shinycssloaders)
+library(highcharter)
+library(magrittr)
+library(tidyverse)
+
+# Parámetros highcharts  -------------------------------------------------------------
+
+hcoptslang <- getOption("highcharter.lang")
+hcoptslang$weekdays<- c("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+hcoptslang$shortMonths <- c("Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic")
+hcoptslang$months <- c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre")
+hcoptslang$thousandsSep <- c(",")
+options(highcharter.lang = hcoptslang)
 
 # ---- tweet-conf-dash Functions ----
 source(here::here("R/functions.R"))
 source(here::here("R/progress_bar.R"))
 source(here::here("R/module/tweetExplorer.R"))
-
+source(here::here("R/tidydiscursera.R"))
+sw <- read_csv(here::here("data/stopwords.csv"))
 # ---- Settings ----
 source(here::here("00_settings.R"))
+
+# Español -----------------------------------------------------------------
+
+source(here::here("R/pagerEsp.R"))
 
 # ---- Color Helpers ----
 BASIC_COLORS <- c("primary", "info", "success", "danger", "warning")

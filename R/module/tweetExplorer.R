@@ -10,7 +10,7 @@ tweetExplorerUI <- function(id, tweet_div_id = "tweetExplorer-tweet", collapsed 
           width = "6 col-md-12",
           status = status,
           solidHeader = TRUE,
-          title = "Options",
+          title = "Opciones",
           collapsible = TRUE,
           collapsed = collapsed,
           selectInput(

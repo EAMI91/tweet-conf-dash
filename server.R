@@ -167,72 +167,62 @@ function(session, input, output) {
 
 
   # Dashboard Plots ---------------------------------------------------------
-  output$plot_hourly_tweet_volume <- renderPlotly({
-    tweets_all() %>%
-      tweets_just(created_at, is_topic) %>%
-      group_by(is_topic) %>%
-      tweets_volume() %>%
-      mutate(topic = if_else(is_topic, "topic", "all")) %>%
-      ungroup() %>%
-      rename(Date = by_time) %>%
-      select(-is_topic) %>%
-      spread(topic, n, fill = 0) %>%
-      plot_ly(x = ~ Date) %>%
-      add_lines(y = ~topic, name = TOPIC$name, color = I(ADMINLTE_COLORS$teal)) %>%
-      {
-        if (!is.null(TOPIC$full_community)) {
-          add_lines(., y = ~all, name = TOPIC$full_community, color = I(ADMINLTE_COLORS$purple))
-        } else .
-      }%>%
-      config(displayModeBar = FALSE) %>%
-      layout(
-        xaxis = list(
-          range = c(now(tz_global()) - days(7), now(tz_global())),
-          rangeselector = list(
-            buttons = list(
-              list(
-                count = 1,
-                label = "Today",
-                step = "day",
-                stepmode = "todate"),
-              list(
-                count = 1,
-                label = "Yesterday",
-                step = "day",
-                stepmode = "backward"),
-              list(
-                count = 7,
-                label = "Week",
-                step = "day",
-                stepmode = "backward"),
-              list(step = "all", label = "All"))),
-          rangeslider = list(type = "date")),
-        yaxis = list(title = "Tweets"),
-        legend = list(orientation = 'h', x = 0.05, y = 0.9),
-        hovermode = "compare" # thanks: https://stackoverflow.com/a/46733461/2022615
-      ) %>%
-      config(collaborate = FALSE, cloud = FALSE, mathjax = NULL)
-  })
+  output$plot_hourly_tweet_volume <- renderHighchart({
+    aux <- tweets_all() %>% group_by(hora=floor_date(created_at, unit="hour")) %>%
+      summarise(Tuits = n(), Impactos=sum(followers_count,na.rm=T),
+                Texto = paste(text, collapse = " "),
+                Retuits=sum(retweet_count), Favoritos=sum(favorite_count))%>%
+      mutate(hora = datetime_to_timestamp(hora),Texto= gsub("@\\w+ *|https|t.co", "", Texto))
+    tt <- aux %>%
+      discursera_clave(sw=sw, grupos = "hora",unnested = F, token = "palabras",top = 3) %>% group_by(hora) %>%
+      summarise(clave=paste(Palabra, collapse = ", "))
+    aux %<>% full_join(tt) %>%
+      gather(analisis, nn, Tuits:Favoritos,-Texto)
+    aux %>%
+      filter(analisis !="Impactos") %>%
+      hchart(hcaes(x= hora, y= nn, group = analisis), type = "line")  %>%
+      hc_plotOptions(series = list(lineWidth = 5, selected = F )) %>%
+      hc_add_series(aux %>%
+                      filter(analisis =="Impactos"),
+                    hcaes(x= hora, y= nn, group = analisis), type = "line", visible=F) %>%
+      hc_xAxis(type= 'datetime',
+               crosshair = T,
+               # dateTimeLabelFormats= list(week=list(main= "%d")),
+               lineColor= '#678EB5',lineWidth=2.5,
+               tickWidth = 0,
+               tickAmount = 5,
+               gridLineDashStyle= "Dot",
+               gridLineWidth =0,
+               title= list(text = "Fecha",
+                           style = list(color = "#3E4554", fontSize = "17px")),
+               labels = list(
+                 enabled = T, style = list(color = "#3E4554", fontSize= "22px")  )) %>%
+      hc_yAxis(lineColor= '#004B82',lineWidth= 2.5,
+               tickAmount =5,
+               step = 5,
+               min = 0,
+               gridLineWidth =2.5,
+               # gridLineColor = "#FDA25C",
+               gridLineDashStyle= "Dot",
+               title= list(text = "",
+                           style = list(color = "#536271", fontSize = "17px")),
+               labels = list(format=paste0("{value:,.0f}" ),
+                             style = list(color = "#678EB5", fontSize = "17px")) ) %>%
+      hc_title(text = "Análisis por hora",
+               style = list(color = "#00ACEE", bold = T, fontSize= "28px")) %>%
+      hc_tooltip(
+        style = list(fontSize = "25px"),
+        positioner = JS("function (labelWidth, labelHeight) {return{x: (this.chart.plotLeft + (this.chart.plotWidth- this.chart.plotLeft)*.1),
+                          y: (this.chart.plotHeight)-(this.chart.plotHeight-this.chart.plotTop)*.9};}"),
+        shared = T,
+        headerFormat= '<b>{point.key}</b><br>Palabra clave: {point.clave}<br>',
+        borderWidth= 0,
+        shadow=F,
+        backgroundColor= 'transparent') %>%
+      hc_chart(style=list(fontFamily="Signika"), zoomType = "x") %>%
+      hc_colors(c( "#3AAFB9", "#CF1259","#FE7F2D", "#719B23")) %>%
+      hc_legend(enabled = T, itemStyle = list(fontSize = "20px"))
 
-  output$plot_tweets_by_hour <- renderPlotly({
-    tweets() %>%
-      tweets_just(created_at, is_topic) %>%
-      tweets_by_time(by = "1 hour") %>%
-      mutate(hour = hour(by_time)) %>%
-      group_by(hour, is_topic) %>%
-      count() %>%
-      ungroup() %>%
-      mutate(topic = if_else(is_topic, "topic", "all")) %>%
-      select(-is_topic) %>%
-      spread(topic, n, fill = 0) %>%
-      plot_ly(x = ~hour) %>%
-      add_bars(y = ~topic, name = TOPIC$name, color = I(ADMINLTE_COLORS$teal)) %>%
-      config(displayModeBar = FALSE) %>%
-      layout(
-        yaxis = list(title = "Tweets"),
-        xaxis = list(title = glue::glue("Hour of the Day ({TZ_GLOBAL})")),
-        hovermode = "compare" # thanks: https://stackoverflow.com/a/46733461/2022615
-      )
   })
 
 
@@ -246,8 +236,8 @@ function(session, input, output) {
   output$dash_most_liked <- renderUI({
     validate(
       need(nrow(tweets_most()) > 0,
-      paste("No hay tuits en", TWEET_MOST$text)
-    ))
+           paste("No hay tuits en", TWEET_MOST$text)
+      ))
 
     tweets_most() %>%
       arrange(desc(favorite_count)) %>%
@@ -260,8 +250,8 @@ function(session, input, output) {
   output$dash_most_rt <- renderUI({
     validate(
       need(nrow(tweets_most()) > 0,
-      paste("No tweets in", TWEET_MOST$text)
-    ))
+           paste("No tweets in", TWEET_MOST$text)
+      ))
 
     tweets_most() %>%
       arrange(desc(retweet_count)) %>%
@@ -368,7 +358,7 @@ function(session, input, output) {
         !str_detect(word, TOPIC$wordlist_exclude),
         nchar(word) >= 3
       ) %>%
-      anti_join(stopwords::stopwords(language = "es") %>% as_tibble() %>% set_names("word"), by = "word") %>%
+      anti_join(sw, by = c("word" = "Palabra")) %>%
       count(word, sort = TRUE) %>%
       slice(1:10)
 
@@ -392,7 +382,7 @@ function(session, input, output) {
 
   tweet_wall_page_break = 20
   tweet_wall_n_items <- reactive({ nrow(tweets_wall()) })
-  tweet_wall_page <- shinyThings::pager("tweet_wall_pager",
+  tweet_wall_page <- pager2("tweet_wall_pager",
                                         n_items = tweet_wall_n_items,
                                         page_break = tweet_wall_page_break)
 
@@ -400,8 +390,8 @@ function(session, input, output) {
     s_page_items <- tweet_wall_page() %||% 1L
 
     validate(need(
-     nrow(tweets_wall()) > 0,
-     "No hay tuits en el intervalo de tiempo seleccionado. Intente con otras fechas."
+      nrow(tweets_wall()) > 0,
+      "No hay tuits en el intervalo de tiempo seleccionado. Intente con otras fechas."
     ))
 
     tweets_wall() %>%
@@ -429,7 +419,7 @@ function(session, input, output) {
   })
 
   pic_tweets_n_items <- reactive({ nrow(tweets_pictures()) })
-  pic_tweets_page <- shinyThings::pager("pic_tweets", pic_tweets_n_items, pic_tweets_page_break)
+  pic_tweets_page <- pager2("pic_tweets", pic_tweets_n_items, pic_tweets_page_break)
 
   output$pic_tweets_wall <- renderUI({
     s_page_items <- pic_tweets_page() %||% 1L
