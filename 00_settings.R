@@ -38,9 +38,9 @@ META <- list(
 # gathering.
 TOPIC <- list(
   # Name of the conference or topic, for use in descriptive text
-  name             = "Aprende en casa",
+  name             = "AprendeEnCasa",
   # Name of the full Twitter community, for use in descriptive text
-  full_community   = "SEP",
+  full_community   = NULL,
   # Terms related to the topic that must be included in topical tweet text
   terms            = c("emoctezumab","sep_mx"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
@@ -57,7 +57,7 @@ TWEET_MOST <- list(
   hours   = 12,
   days    = 0,
   minutes = 0,
-  text    = "12 hours"
+  text    = "12 horas"
 )
 
 # ---- Dates and Times ----
