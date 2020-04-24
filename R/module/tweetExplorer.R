@@ -146,8 +146,8 @@ tweetExplorer <- function(input, output, session, all_tweets, tzone = "America/M
   rownames = FALSE,
   colnames = c("Fecha", "Usuario", "Tuit", "RT", "Fav", "Menciones"),
   filter = 'top',
-  options = list(lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5,
-                 language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json'))
+  options = list(language = list(url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/Spanish.json'),
+                 lengthMenu = c(5, 10, 25, 50, 100), pageLength = 5)
   )
 
   output$tweet <- renderUI({
