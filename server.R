@@ -368,7 +368,7 @@ function(session, input, output) {
         !str_detect(word, TOPIC$wordlist_exclude),
         nchar(word) >= 3
       ) %>%
-      anti_join(tidytext::stop_words, by = "word") %>%
+      anti_join(stopwords::stopwords(language = "es") %>% as_tibble() %>% set_names("word"), by = "word") %>%
       count(word, sort = TRUE) %>%
       slice(1:10)
 
@@ -445,20 +445,20 @@ function(session, input, output) {
   })
 
   # Schdeule ---------------------------------------------------------------
-  output$table_schedule <- DT::renderDataTable({
-    if (is.null(SCHEDULE$data)) return(NULL)
-    SCHEDULE$data %>%
-      DT::datatable(
-        rownames = FALSE,
-        filter = "top",
-        style = "bootstrap",
-        autoHideNavigation = TRUE,
-        selection = "none",
-        extensions = "Responsive",
-        options = list(searchHighlight = TRUE),
-        colnames = c("Session", "Day", "Start", "End", "Track", "Title", "Speaker", "Description")
-      )
-  })
+  # output$table_schedule <- DT::renderDataTable({
+  #   if (is.null(SCHEDULE$data)) return(NULL)
+  #   SCHEDULE$data %>%
+  #     DT::datatable(
+  #       rownames = FALSE,
+  #       filter = "top",
+  #       style = "bootstrap",
+  #       autoHideNavigation = TRUE,
+  #       selection = "none",
+  #       extensions = "Responsive",
+  #       options = list(searchHighlight = TRUE),
+  #       colnames = c("Session", "Day", "Start", "End", "Track", "Title", "Speaker", "Description")
+  #     )
+  # })
 
   # TweetExplorer -----------------------------------------------------------
   callModule(tweetExplorer, "tweet_table", reactive({ tweets() }), tzone = tz_global())

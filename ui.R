@@ -29,8 +29,8 @@ dashboardPage(
       } else if (!is.null(SCHEDULE$url)) {
         menuItem(HTML("Schedule <span class='fa fa-external-link-alt' style='padding-left: 0.5em; font-size: 90%'></span>"),
                  href = SCHEDULE$url, icon = icon("calendar"))
-      },
-      menuItem("About", tabName = "tab_about", icon = icon("info"))
+      }#,
+      # menuItem("About", tabName = "tab_about", icon = icon("info"))
     )
   ),
 
@@ -43,33 +43,33 @@ dashboardPage(
         "tab_dashboard",
         tags$head(
           # Metadata <head> ---------------------------------------------------------
-          HTML(glue::glue(
-            '<meta property="og:title" content="{META$name}">
-            <meta property="og:description" content="{META$description}">
-            <meta property="og:url" content="{META$app_url}">
-            <meta property="og:image" content="{META$app_icon}">
-            <meta name="twitter:card" content="summary">
-            <meta name="twitter:creator" content="@grrrck">
-            <meta name="twitter:site" content="https://garrickadenbuie.com">
-            <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
-            <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
-            <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
-            <link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
-            <link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
-            <link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
-            <link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
-            <link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
-            <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
-            <link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
-            <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-            <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
-            <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-            <link rel="manifest" href="manifest.json">
-            <meta name="msapplication-TileColor" content="#6699CC">
-            <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
-            <meta name="theme-color" content="#6699CC">
-            '
-          )),
+          # HTML(glue::glue(
+          #   '<meta property="og:title" content="{META$name}">
+          #   <meta property="og:description" content="{META$description}">
+          #   <meta property="og:url" content="{META$app_url}">
+          #   <meta property="og:image" content="{META$app_icon}">
+          #   <meta name="twitter:card" content="summary">
+          #   <meta name="twitter:creator" content="@grrrck">
+          #   <meta name="twitter:site" content="https://garrickadenbuie.com">
+          #   <link rel="apple-touch-icon" sizes="57x57" href="apple-icon-57x57.png">
+          #   <link rel="apple-touch-icon" sizes="60x60" href="apple-icon-60x60.png">
+          #   <link rel="apple-touch-icon" sizes="72x72" href="apple-icon-72x72.png">
+          #   <link rel="apple-touch-icon" sizes="76x76" href="apple-icon-76x76.png">
+          #   <link rel="apple-touch-icon" sizes="114x114" href="apple-icon-114x114.png">
+          #   <link rel="apple-touch-icon" sizes="120x120" href="apple-icon-120x120.png">
+          #   <link rel="apple-touch-icon" sizes="144x144" href="apple-icon-144x144.png">
+          #   <link rel="apple-touch-icon" sizes="152x152" href="apple-icon-152x152.png">
+          #   <link rel="apple-touch-icon" sizes="180x180" href="apple-icon-180x180.png">
+          #   <link rel="icon" type="image/png" sizes="192x192"  href="android-icon-192x192.png">
+          #   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+          #   <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+          #   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+          #   <link rel="manifest" href="manifest.json">
+          #   <meta name="msapplication-TileColor" content="#6699CC">
+          #   <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+          #   <meta name="theme-color" content="#6699CC">
+          #   '
+          # )),
           if (!is.null(GA_KEY)) HTML(
             glue::glue(
               '
@@ -245,12 +245,12 @@ dashboardPage(
                 class = "form-group",
                 tags$div(
                   class = "btn-toolbar btn-group-sm",
-                  dateRangeInput("tweet_wall_daterange", "",
+                  dateRangeInput("tweet_wall_daterange", "",language = "es",
                                  start = today(tz_global()), end = today(tz_global()),
                                  min = "2020-01-01", max = today(tz_global()),
-                                 weekstart = 1, separator = " to "),
+                                 weekstart = 1, separator = " a "),
                   shinyThings::dropdownButtonUI("tweet_wall_date_presets",
-                                                TWEET_WALL_DATE_INPUTS,
+                                                TWEET_WALL_DATE_INPUTS,label = "Opciones",
                                                 class = "btn-default")
                 )
               )
@@ -270,7 +270,8 @@ dashboardPage(
         tags$h1(HTML("Tuits con", twemoji("1F5BC", width = "42px"))),
         shinyThings::paginationUI("pic_tweets", width = 12, offset = 0),
         withSpinner(uiOutput("pic_tweets_wall"), type = 3),
-        shinyThings::pagerUI("pic_tweets", centered = TRUE)
+        shinyThings::pagerUI("pic_tweets", centered = TRUE,
+                             label_prev = "Anterior",label_next="Siguiente")
       ),
 
       # Explore - tab_explore ---------------------------------------------------
@@ -282,21 +283,21 @@ dashboardPage(
       ),
 
       # Schedule - tab_schedule -------------------------------------------------
-      if (!is.null(SCHEDULE$data)) tabItem(
-        "tab_schedule",
-        fluidRow(
-          box(
-            width = 12,
-            status = "success",
-            DT::dataTableOutput("table_schedule"),
-            helpText(
-              "This is an unofficial schdeule. Please refer to the",
-              tags$a(href = SCHEDULE$url, "official", META$conf_org, "website"),
-              "for the up-to-date schedule."
-            )
-          )
-        )
-      ) else tags$div(class = "tab-pane"),
+      # if (!is.null(SCHEDULE$data)) tabItem(
+      #   "tab_schedule",
+      #   fluidRow(
+      #     box(
+      #       width = 12,
+      #       status = "success",
+      #       DT::dataTableOutput("table_schedule"),
+      #       helpText(
+      #         "This is an unofficial schdeule. Please refer to the",
+      #         tags$a(href = SCHEDULE$url, "official", META$conf_org, "website"),
+      #         "for the up-to-date schedule."
+      #       )
+      #     )
+      #   )
+      # ) else tags$div(class = "tab-pane"),
 
       # About - tab_about -------------------------------------------------------
       tabItem(

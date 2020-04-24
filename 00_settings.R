@@ -13,7 +13,7 @@ META <- list(
   # App title, long, shown when sidebar is open, HTML is valid
   logo_lg     = "<em>Aprende en casa</em>",
   # App title, short, shown when sidebar is collapsed, HTML is valid
-  logo_mini   = "<em>rs</em><strong>c</strong>",
+  logo_mini   = "<em>ae</em><strong>c</strong>",
   # Icon for box with count of conference-related tweets
   topic_icon  = "comments",
   # Icon for box with count of "community"-related tweets
@@ -40,7 +40,7 @@ TOPIC <- list(
   # Name of the conference or topic, for use in descriptive text
   name             = "Aprende en casa",
   # Name of the full Twitter community, for use in descriptive text
-  full_community   = "Aprende en casa",
+  full_community   = "SEP",
   # Terms related to the topic that must be included in topical tweet text
   terms            = c("emoctezumab","sep_mx"),
   # Hashtags to exclude from the Top 10 Hashtags list (because they're implied by the topic)
@@ -81,6 +81,21 @@ TWEET_WALL_DATE_INPUTS <- c(
   "En 2020"   = "in_2020"
 )
 
+# Conference-related dates, used only for the rest of this section
+# .workshop_start   <- ymd("2019-01-15", tz = tz_global())
+# .conference_start <- ymd("2019-01-17", tz = tz_global())
+
+# Only show "Since Workshop" button _after_ workshops have started
+# if (today_tz() > .workshop_start) {
+#   TWEET_WALL_DATE_INPUTS <- c(
+#     TWEET_WALL_DATE_INPUTS, "Since Workshops" = "since_workshop")
+# }
+#
+# # Only show "Conference Proper" button _after_ conference has started
+# if (today_tz() > .conference_start) {
+#   TWEET_WALL_DATE_INPUTS <- c(
+#     TWEET_WALL_DATE_INPUTS, "Conference Proper" = "conf_prop")
+# }
 
 
 # TWEET_WALL_DATE_RANGE:
@@ -104,8 +119,8 @@ TWEET_WALL_DATE_RANGE <- function(inputId) {
 # sidebar button link directly to the conference schedule. Or also provide
 # `SCHEDULE$data` to display an interactive dataTable of the schedule.
 SCHEDULE <- list()
-SCHEDULE$url <- "https://www.rstudio.com/conference/"
-SCHEDULE$data <- readRDS(here::here("data/schedule.rds"))
+# SCHEDULE$url <- "https://www.rstudio.com/conference/"
+# SCHEDULE$data <- readRDS(here::here("data/schedule.rds"))
 
 # ---- Google Analytics Key ----
 # If you would like to use Google Analytics, save your GA key in a file called
@@ -165,7 +180,7 @@ BLOCKLIST <- list(
 
 # Demo Settings -----------------------------------------------------------
 # DEMO <- list(
-#   relive_date = ymd("2019-01-18", tz = tz_global())
+#   relive_date = ymd("2020-04-01", tz = tz_global())
 # )
 #
 # if (exists("DEMO") && !is.null(DEMO$relive_date)) {
